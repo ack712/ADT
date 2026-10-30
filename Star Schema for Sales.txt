@@ -1,0 +1,74 @@
+CREATE DATABASE SalesDB;
+USE SalesDB;
+
+CREATE TABLE DIM_PRODUCT (
+    Product_ID INT PRIMARY KEY,
+    Product_Name VARCHAR(50),
+    Brand VARCHAR(50)
+);
+
+CREATE TABLE DIM_CUSTOMER (
+    Customer_ID INT PRIMARY KEY,
+    Customer_Name VARCHAR(50),
+    address VARCHAR(100)
+);
+
+CREATE TABLE DIM_TIME (
+    Time_ID INT PRIMARY KEY,
+    Date DATE,
+    Month VARCHAR(20),
+    Year INT
+);
+
+INSERT INTO DIM_PRODUCT VALUES
+(1, 'Laptop', 'Dell'),
+(2, 'Mobile', 'Samsung'),
+(3, 'Headphones', 'Sony');
+
+INSERT INTO DIM_CUSTOMER VALUES
+(101, 'Amit', 'Ratnagiri'),
+(102, 'Priya', 'Mumbai'),
+(103, 'Rahul', 'Pune');
+
+INSERT INTO DIM_TIME VALUES
+(1, '2026-01-15', 'January', 2026),
+(2, '2026-02-10', 'February', 2026),
+(3, '2026-03-20', 'March', 2026);
+
+CREATE TABLE FACT_SALES (
+    Sale_ID INT PRIMARY KEY,
+    Product_ID INT,
+    Customer_ID INT,
+    Time_ID INT,
+    Sales_amount DECIMAL(10,2),
+    Quantity_sold INT,
+    FOREIGN KEY (Product_ID)
+        REFERENCES DIM_PRODUCT(Product_ID),
+    FOREIGN KEY (Customer_ID)
+        REFERENCES DIM_CUSTOMER(Customer_ID),
+    FOREIGN KEY (Time_ID)
+        REFERENCES DIM_TIME(Time_ID)
+);
+
+INSERT INTO FACT_SALES VALUES
+(1, 1, 101, 1, 50000, 1),
+(2, 2, 102, 2, 20000, 2),
+(3, 3, 103, 3, 3000, 3);
+
+SELECT
+    p.Product_Name,
+    c.Customer_Name,
+    t.Date,
+    f.Sales_amount,
+    f.Quantity_sold
+FROM FACT_SALES f
+JOIN DIM_PRODUCT p
+    ON f.Product_ID = p.Product_ID
+JOIN DIM_CUSTOMER c
+    ON f.Customer_ID = c.Customer_ID
+JOIN DIM_TIME t
+    ON f.Time_ID = t.Time_ID;
+    
+SELECT SUM(Sales_amount) AS Total_Sales
+FROM FACT_SALES;
+

@@ -1,0 +1,39 @@
+CREATE DATABASE ETLDB;
+USE ETLDB;
+
+CREATE TABLE employee_source1 (
+    id INT,
+    name VARCHAR(100),
+    salary VARCHAR(20),
+    department VARCHAR(100)
+);
+
+INSERT INTO employee_source1 VALUES
+(1, ' amit ', '30000', ' it '),
+(2, ' rahul ', '35000', ' cse '),
+(3, ' priya ', '40000', ' it '),
+(4, ' sneha ', '32000', ' ece '),
+(5, ' rohan ', '45000', ' cse ');
+
+CREATE TABLE employee_target (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(10,2),
+    department VARCHAR(100)
+);
+
+INSERT INTO employee_target
+    (id, name, salary, department)
+SELECT
+    id,
+    UPPER(TRIM(name)),
+    CAST(TRIM(salary) AS DECIMAL(10,2)),
+    UPPER(TRIM(department))
+FROM employee_source1;
+
+SELECT * FROM employee_source1;
+SELECT * FROM employee_target;
+SELECT COUNT(*) AS total_employees
+FROM employee_target;
+
+

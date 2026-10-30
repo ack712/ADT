@@ -1,0 +1,31 @@
+CREATE DATABASE TemporalDB;
+USE TemporalDB;
+
+CREATE TABLE Customer_Temporal
+(
+    Customer_ID INT,
+    Customer_Name VARCHAR(100),
+    Address VARCHAR(100),
+    Phone VARCHAR(15),
+    Valid_From DATE,
+    Valid_To DATE,
+    Transaction_Start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Transaction_End TIMESTAMP NULL,
+    PRIMARY KEY(Customer_ID, Valid_From)
+);
+
+INSERT INTO Customer_Temporal VALUES 
+(101,'Amit Sharma','Pune','9876543210','2024-01-01','9999-12-31',CURRENT_TIMESTAMP,NULL),
+(2, 'Priya', 'Pune', '9876543211', '2024-02-01', '9999-12-31',CURRENT_TIMESTAMP,NULL),
+(3, 'Rahul', 'Delhi', '9876543212', '2024-03-01', '9999-12-31',CURRENT_TIMESTAMP,NULL),
+(4, 'Sneha', 'Chennai', '9876543213', '2024-04-01', '9999-12-31',CURRENT_TIMESTAMP,NULL),
+(5, 'Karan', 'Bengaluru', '9876543214', '2024-05-01', '9999-12-31',CURRENT_TIMESTAMP,NULL);
+SELECT * FROM Customer_Temporal;
+
+SELECT * FROM Customer_Temporal WHERE '2024-06-15' BETWEEN Valid_From AND Valid_To;
+
+SELECT Customer_Name,Address,Valid_From,Valid_To FROM Customer_Temporal ORDER BY Valid_From;
+
+SELECT Customer_ID,Transaction_Start, Transaction_End FROM Customer_Temporal;
+
+

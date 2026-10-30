@@ -1,0 +1,84 @@
+*Tourist Places
+CREATE DATABASE SaptialDB;
+USE SaptialDB;
+
+CREATE TABLE TouristPlaces(
+PlaceID INT PRIMARY KEY,
+PlaceName VARCHAR(50),
+Location POINT NOT NULL
+);
+
+INSERT INTO TouristPlaces VALUES
+(1,"Ganpatipule",ST_GeomFromText("POINT(73.2660 17.1448)")),
+(2,"Ratnagiri Fort",ST_GeomFromText("POINT(73.3060 16.9944)")),
+(3,"Thibaw Palace",ST_GeomFromText("POINT(73.3050 16.9990)")),
+(4,"Jaigad Fort",ST_GeomFromText("POINT(73.2270 17.2930)"));
+
+SELECT * FROM  TouristPlaces;
+
+SELECT PlaceName, ST_AsText(Location) FROM TouristPlaces;
+SELECT PlaceName, ST_X(Location)AS Longitude, ST_Y(Location)AS Latitude FROM TouristPlaces;
+SELECT ST_Distance(
+ST_GeomFromText("POINT(73.2660 17.1448)"),
+ST_GeomFromText("POINT(73.3060 16.9944)")
+)AS Distance;
+
+SELECT PlaceName FROM TouristPlaces WHERE ST_Distance_Sphere(Location,POINT(73.3050 ,16.9900) )<200000;
+SELECT PlaceID, PlaceName, ST_AsText(Location) FROM TouristPlaces;
+
+
+*Tourist Routes 
+CREATE DATABASE SaptialDB1;
+USE SaptialDB1;
+
+CREATE TABLE TouristRoutes (
+    route_id INT PRIMARY KEY,
+    route_name VARCHAR(100),
+    route LINESTRING NOT NULL
+);
+INSERT INTO TouristRoutes(route_id, route_name, route)
+VALUES
+(
+    1,
+    'Ratnagiri Tourist Route',
+    ST_GeomFromText(
+        'LINESTRING(
+        73.3060 16.9944,
+        73.3050 16.9990,
+        73.2660 17.1448,
+        73.2270 17.2930
+        )'
+    )
+);
+SELECT
+    route_name,
+    ST_AsText(route) AS Tourist_Route
+FROM TouristRoutes;
+
+SELECT
+    route_name,
+    ST_Length(route) AS Route_Length
+FROM TouristRoutes;
+
+SELECT
+    route_name,
+    ST_NumPoints(route) AS Total_Tourist_Points
+FROM TouristRoutes;
+
+SELECT
+    route_name,
+    ST_AsText(ST_StartPoint(route)) AS Start_Point
+FROM TouristRoutes;
+
+SELECT
+    route_name,
+    ST_AsText(ST_EndPoint(route)) AS End_Point
+FROM TouristRoutes;
+
+SELECT
+    ST_AsText(ST_PointN(route, 2)) AS Second_Tourist_Point
+FROM TouristRoutes;
+
+
+
+
